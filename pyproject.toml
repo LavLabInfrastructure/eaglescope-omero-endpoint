@@ -31,6 +31,9 @@ Documentation = "https://github.com/LavLabInfrastructure/eaglescope-omero-endpoi
 Issues = "https://github.com/LavLabInfrastructure/eaglescope-omero-endpoint/issues"
 Source = "https://github.com/LavLabInfrastructure/eaglescope-omero-endpoint"
 
+[project.scripts]
+eaglescope-omero-endpoint = "omero_scoper.__main__:main"
+
 [tool.hatch.version]
 path = "src/omero_scoper/__about__.py"
 

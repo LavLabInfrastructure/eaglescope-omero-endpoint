@@ -1,13 +1,17 @@
 import logging
 from datetime import datetime
 from urllib.parse import urlparse
-from omero.gateway import BlitzGateway
+from omero.gateway import BlitzGateway, TagAnnotationWrapper, BlitzObjectWrapper
 import threading
+
+TagAnnotationWrapper.__hash__ = lambda self : self.getId()
+BlitzObjectWrapper.__hash__ = lambda self : self.getId()
 
 class OmeroBaseScoper:
     def __init__(self, conn: BlitzGateway, group_id: int = -1, exclusive_tagset_ids=[]):
         self.conn = conn
         self.group_id = group_id
+        self.exclusive_tagset_ids = exclusive_tagset_ids
         self.hostname = urlparse(self.conn.host).hostname
         self.response = None
         self.response_compilation_datetime = None
@@ -20,6 +24,29 @@ class OmeroBaseScoper:
         logging.info("Initializing and compiling the initial response.")
         self.compile_response()
         self.refresh_thread.start()
+    
+    def get_child_tags(self, tag):
+        child_tags =  [ x.getChild() for x in self.conn.getAnnotationLinks('TagAnnotation', parent_ids=[tag.getId()])]
+        return child_tags
+        
+    def organize_tagsets(self, tags):
+        tags = list(tags)
+        tagsets = {'orphan': []}
+        child_to_parent = []
+
+        # First pass: identify tagsets and children
+        for tag in tags:
+            children = self.get_child_tags(tag)
+            if children:
+                tagsets.update({tag: children})
+                child_to_parent.extend([x.getId() for x in children])
+
+        # Second pass: identify orphan tags
+        for tag in tags:
+            if tag.getId() not in child_to_parent:
+                tagsets['orphan'].append(tag)
+
+        return tagsets
     
     def pull_info(self):
         """

@@ -11,11 +11,19 @@ RUN chown -R vscode /app
 
 FROM base AS hatch
 RUN pip3 install hatch
+RUN hatch run build
 ENV HATCH_ENV=default
 ENTRYPOINT ["hatch", "run"]
 
-FROM base AS dev
-RUN pip3 install hatch 
-RUN hatch build
-RUN pip3 install $(find /app -name 'requirement*.txt' -exec echo -n '-r {} ' \;)
+FROM base AS prod
+COPY --from=hatch /app/dist/*.whl /tmp
+RUN pip3 install /tmp/*.whl
+RUN pip3 install gunicorn
+ENTRYPOINT ["gunicorn", ""]
 USER vscode
+
+FROM base AS dev
+USER vscode
+RUN pip3 install hatch 
+RUN pip3 install $(find /app -name 'requirement*.txt' -exec echo -n '-r {} ' \;)
+
