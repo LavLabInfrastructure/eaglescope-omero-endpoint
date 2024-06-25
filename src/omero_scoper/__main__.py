@@ -17,6 +17,19 @@ class EnvDefault(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
+class EnvDefaultStoreTrue(argparse.Action):
+    def __init__(self, envvar, required=True, default=False, **kwargs):
+        self.envvar = envvar
+
+        if envvar and envvar in os.environ:
+            env_value = os.environ[envvar].lower()
+            if env_value in ['true', '1', 'yes']:
+                default = True
+
+        super(EnvDefault, self).__init__(default=default, required=False, nargs=0, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, True)
 
 class OmeroScoperApp(Flask):
     def __init__(self, import_name, conn, group_id, exclusive_tagset_ids, scoper_type):
@@ -58,8 +71,8 @@ if __name__ == '__main__':
                         action=EnvDefault, envvar='OMERO_HOST')
     parser.add_argument('--port', type=int, default=None, help='OMERO server port',
                         action=EnvDefault, envvar='OMERO_PORT')
-    parser.add_argument('--secure', action='store_true', help='Use secure OMERO server connection',
-                        action=EnvDefault, envvar='OMERO_SECURE')
+    parser.add_argument('--secure', help='Use secure OMERO server connection',
+                        action=EnvDefaultStoreTrue, envvar='OMERO_SECURE')
     parser.add_argument('--group_id', type=int, default=-1, help='Group ID to scope to',
                         action=EnvDefault, envvar='OMERO_GROUP_ID')
     parser.add_argument('--exclusive_tagset_ids', nargs='+', type=int, default=[], help='List of exclusive tagset IDs',
