@@ -10,8 +10,8 @@ COPY . /app/
 RUN chown -R vscode /app
 
 FROM base AS hatch
-RUN pip3 install hatch
-RUN hatch run build
+RUN pip3 install hatch https://github.com/glencoesoftware/zeroc-ice-py-linux-x86_64/releases/download/20240202/zeroc_ice-3.6.5-cp312-cp312-manylinux_2_28_x86_64.whl 
+RUN hatch build
 ENV HATCH_ENV=default
 ENTRYPOINT ["hatch", "run"]
 
