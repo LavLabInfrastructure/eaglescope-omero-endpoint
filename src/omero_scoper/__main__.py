@@ -46,7 +46,7 @@ def main(**kwargs):
     conn.connect()
     
     app = OmeroScoperApp(__name__, conn, kwargs['group_id'], kwargs['exclusive_tagset_ids'], kwargs['scoper_type'])
-    app.run(port=args.http_port)
+    app.run(port=kwargs['http_port'])
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run OmeroBaseScoper as an HTTP endpoint.")
