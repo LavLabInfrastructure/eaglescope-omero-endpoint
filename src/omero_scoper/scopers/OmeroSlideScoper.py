@@ -43,7 +43,7 @@ class OmeroSlideScoper(OmeroBaseScoper):
                     continue
                 # should only be tags belonging to an exclusive tagset at this point
                 for tagset, children in tagsets.items():
-                    if image_annot in children:
+                    if image_annot.getId() in [x.getId() for x in children]:
                         tag_map[tagset.getTextValue()] = image_annot_val
                         break
             image_props.update(tag_map)

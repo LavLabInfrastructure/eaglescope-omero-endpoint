@@ -12,7 +12,6 @@ class OmeroSubjectScoper(OmeroBaseScoper):
         Pull the information about the slides from the OMERO server.
         """
         tagsets = self.organize_tagsets(self.conn.getObjects('TagAnnotation'))
-
         response = []
         for subject_obj in self.conn.getObjects('dataset'):
             children_count = 0
@@ -41,7 +40,9 @@ class OmeroSubjectScoper(OmeroBaseScoper):
                     continue
                 # should only be tags belonging to an exclusive tagset at this point
                 for tagset, children in tagsets.items():
-                    if subject_annot in children:
+                    if tagset == 'orphan':
+                        continue
+                    if subject_annot.getId() in [x.getId() for x in children]:
                         tag_map[tagset.getTextValue()] = subject_annot_val
                         break
 
@@ -57,7 +58,9 @@ class OmeroSubjectScoper(OmeroBaseScoper):
                         continue
                     # should only be tags belonging to an exclusive tagset at this point
                     for tagset, children in tagsets.items():
-                        if image_annot in children:
+                        if tagset == 'orphan':
+                            continue
+                        if image_annot.getId() in [x.getId() for x in children]:
                             tag_map[tagset.getTextValue()] = image_annot_val
                             break
 
