@@ -100,7 +100,8 @@ class OmeroBaseScoper:
             if self.response is None:
                 logging.info("Initial response not available, compiling response.")
                 self.compile_response()
-            elif (datetime.now() - self.response_compilation_datetime).seconds > 1:
+            # refresh every 2 hours
+            elif (datetime.now() - self.response_compilation_datetime).seconds > 7200: 
                 if not self.is_refreshing:
                     logging.info("Response is stale, triggering a background refresh.")
                     self._background_refresh()
