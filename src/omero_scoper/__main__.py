@@ -49,19 +49,7 @@ class OmeroScoperApp(Flask):
         info = self.scoper.get_response()
         return jsonify(info)
     
-def main(**kwargs):
-    conn_optional_args = {}
-    if kwargs.get('port'):
-        conn_optional_args.update({'port':kwargs['port']})
-    if kwargs.get('secure'):
-        conn_optional_args.update({'secure':kwargs['secure']})
-    conn = BlitzGateway(kwargs['username'], kwargs['password'], host=kwargs['host'], **conn_optional_args)
-    conn.connect()
-    
-    app = OmeroScoperApp(__name__, conn, kwargs['group_id'], kwargs['exclusive_tagset_ids'], kwargs['scoper_type'])
-    app.run(port=kwargs['http_port'])
-    
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description="Run OmeroBaseScoper as an HTTP endpoint.")
     parser.add_argument('--username', required=True, help='OMERO server username',
                         action=EnvDefault, envvar='OMERO_USERNAME')
@@ -83,4 +71,16 @@ if __name__ == '__main__':
                         action=EnvDefault, envvar='HTTP_PORT')
 
     args = parser.parse_args()
-    main(**args)
+    conn_optional_args = {}
+    if kwargs.get('port'):
+        conn_optional_args.update({'port':kwargs['port']})
+    if kwargs.get('secure'):
+        conn_optional_args.update({'secure':kwargs['secure']})
+    conn = BlitzGateway(kwargs['username'], kwargs['password'], host=kwargs['host'], **conn_optional_args)
+    conn.connect()
+    
+    app = OmeroScoperApp(__name__, conn, kwargs['group_id'], kwargs['exclusive_tagset_ids'], kwargs['scoper_type'])
+    app.run(port=kwargs['http_port'])
+    
+if __name__ == '__main__':
+    main()
