@@ -80,7 +80,7 @@ def main():
                         action=EnvDefault, envvar='HTTP_PORT')
 
     args, unknown = parser.parse_known_args()
-    kwargs = **args
+    kwargs = vars(args)
     conn_optional_args = {}
     if kwargs.get('port'):
         conn_optional_args.update({'port':kwargs['port']})
