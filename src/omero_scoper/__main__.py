@@ -26,7 +26,7 @@ class EnvDefaultStoreTrue(argparse.Action):
             if env_value in ['true', '1', 'yes']:
                 default = True
 
-        super(EnvDefault, self).__init__(default=default, required=False, nargs=0, **kwargs)
+        super(EnvDefaultStoreTrue, self).__init__(default=default, required=False, nargs=0, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, True)
