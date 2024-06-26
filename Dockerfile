@@ -20,7 +20,7 @@ COPY --from=hatch /app/dist/*.whl /tmp
 RUN pip3 install https://github.com/glencoesoftware/zeroc-ice-py-linux-x86_64/releases/download/20240202/zeroc_ice-3.6.5-cp312-cp312-manylinux_2_28_x86_64.whl && \
     pip3 install /tmp/*.whl
 RUN pip3 install gunicorn
-ENTRYPOINT ["gunicorn", "--bind 0.0.0.0:${HTTP_PORT:-8080}" "omero_scoper.__main__:main()"]
+ENTRYPOINT ["sh", "-c", "'gunicorn --bind 0.0.0.0:${HTTP_PORT:-8080} omero_scoper.__main__:main()'"]
 USER vscode
 
 FROM base AS dev
