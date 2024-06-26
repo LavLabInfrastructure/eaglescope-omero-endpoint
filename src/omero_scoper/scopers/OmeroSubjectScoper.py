@@ -21,13 +21,13 @@ class OmeroSubjectScoper(OmeroBaseScoper):
             tag_map={}
             for tagset, children in tagsets.items():
                 if tagset == 'orphan':
-                    tag_map.update({tag.getTextValue(): False for tag in children})
+                    tag_map.update({tag.getTextValue(): 'false' for tag in children})
                     continue
 
                 if tagset.getId() in self.exclusive_tagset_ids:
                     tag_map.update({tagset.getTextValue(): 'NA'})
                     continue
-                tag_map.update({tag.getTextValue(): False for tag in children})
+                tag_map.update({tag.getTextValue(): 'false' for tag in children})
 
             # add correct values to map
             for subject_annot in subject_obj.listAnnotations():
@@ -36,7 +36,7 @@ class OmeroSubjectScoper(OmeroBaseScoper):
                 # if belongs to a nonexclusive tag, add normally
                 subject_annot_val = subject_annot.getTextValue()
                 if subject_annot_val in tag_map.keys():
-                    tag_map[subject_annot_val] = True
+                    tag_map[subject_annot_val] = 'true'
                     continue
                 # should only be tags belonging to an exclusive tagset at this point
                 for tagset, children in tagsets.items():
@@ -47,14 +47,14 @@ class OmeroSubjectScoper(OmeroBaseScoper):
                         break
 
             for image_obj in subject_obj.listChildren():
-                # for each available tag, check if the image has the tag, making sure to only update false values with true
+                # for each available tag, check if the image has the tag, making sure to only update 'false' values with 'true'
                 for image_annot in image_obj.listAnnotations():
                     if not isinstance(image_annot, TagAnnotationWrapper):
                         continue
                     # if belongs to a nonexclusive tag, add normally
                     image_annot_val = image_annot.getTextValue()
                     if image_annot_val in tag_map.keys():
-                        tag_map[image_annot_val] = True
+                        tag_map[image_annot_val] = 'true'
                         continue
                     # should only be tags belonging to an exclusive tagset at this point
                     for tagset, children in tagsets.items():

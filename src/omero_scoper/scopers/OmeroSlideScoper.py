@@ -24,13 +24,13 @@ class OmeroSlideScoper(OmeroBaseScoper):
             tag_map={}
             for tagset, children in tagsets.items():
                 if tagset == 'orphan':
-                    tag_map.update({tag.getTextValue(): False for tag in children})
+                    tag_map.update({tag.getTextValue(): 'False' for tag in children})
                     continue
 
                 if tagset.getId() in self.exclusive_tagset_ids:
                     tag_map.update({tagset.getTextValue(): 'NA'})
                     continue
-                tag_map.update({tag.getTextValue(): False for tag in children})
+                tag_map.update({tag.getTextValue(): 'False' for tag in children})
 
             # add correct values to map
             for image_annot in image_obj.listAnnotations():
@@ -39,7 +39,7 @@ class OmeroSlideScoper(OmeroBaseScoper):
                 # if belongs to a nonexclusive tag, add normally
                 image_annot_val = image_annot.getTextValue()
                 if image_annot_val in tag_map.keys():
-                    tag_map[image_annot_val] = True
+                    tag_map[image_annot_val] = 'true'
                     continue
                 # should only be tags belonging to an exclusive tagset at this point
                 for tagset, children in tagsets.items():
