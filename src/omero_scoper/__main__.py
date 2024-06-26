@@ -79,7 +79,7 @@ def main():
     parser.add_argument('--http_port', type=int, default=8080, help='Port to run the HTTP server on',
                         action=EnvDefault, envvar='HTTP_PORT')
 
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
     conn_optional_args = {}
     if kwargs.get('port'):
         conn_optional_args.update({'port':kwargs['port']})
