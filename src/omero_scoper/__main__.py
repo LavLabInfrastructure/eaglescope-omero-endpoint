@@ -5,11 +5,19 @@ from omero.gateway import BlitzGateway
 from omero_scoper.scopers.OmeroSlideScoper import OmeroSlideScoper
 from omero_scoper.scopers.OmeroSubjectScoper import OmeroSubjectScoper
 
+
 class EnvDefault(argparse.Action):
     def __init__(self, envvar, required=True, default=None, **kwargs):
+        self.envvar = envvar
         if envvar:
-            if envvar in os.environ:
-                default = os.environ[envvar]
+            env_value = os.getenv(envvar, default)
+            if env_value is not None:
+                if 'nargs' in kwargs and kwargs['nargs'] == '+':
+                    default = [x for x in env_value.split()]
+                    if kwargs.get('type') is int:
+                        default = [int(x) for x in default]
+                else:
+                    default = env_value
         if required and default:
             required = False
         super(EnvDefault, self).__init__(default=default, required=required, 
@@ -17,6 +25,7 @@ class EnvDefault(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
+
 class EnvDefaultStoreTrue(argparse.Action):
     def __init__(self, envvar, required=True, default=False, **kwargs):
         self.envvar = envvar
