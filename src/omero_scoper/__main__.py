@@ -90,6 +90,7 @@ def main():
     conn.connect()
     
     app = OmeroScoperApp(__name__, conn, kwargs['group_id'], kwargs['exclusive_tagset_ids'], kwargs['scoper_type'])
+    return app
     
 if __name__ == '__main__':
     main()
