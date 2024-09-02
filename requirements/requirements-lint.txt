@@ -308,9 +308,9 @@ portalocker==2.10.0 \
     --hash=sha256:48944147b2cd42520549bc1bb8fe44e220296e56f7c3d551bc6ecce69d9b0de1 \
     --hash=sha256:49de8bc0a2f68ca98bf9e219c81a3e6b27097c7bf505a87c5a112ce1aaeb9b81
     # via omero-py
-pylint==3.2.3 \
-    --hash=sha256:02f6c562b215582386068d52a30f520d84fdbcf2a95fc7e855b816060d048b60 \
-    --hash=sha256:b3d7d2708a3e04b4679e02d99e72329a8b7ee8afb8d04110682278781f889fa8
+pylint==3.2.7 \
+    --hash=sha256:02f4aedeac91be69fb3b4bea997ce580a4ac68ce58b89eaefeaf06749df73f4b \
+    --hash=sha256:1b7a721b575eaeaa7d39db076b6e7743c993ea44f57979127c517c6c572c803e
     # via hatch.envs.lint
 pytest==8.2.2 \
     --hash=sha256:c434598117762e2bd304e526244f67bf66bbd7b5d6cf22138be51ff661980343 \
